@@ -1,0 +1,9 @@
+default:
+    suites:
+        login:
+            contexts: [ 
+                LoginContext, 
+                RegistrationContext,
+                AskPasswordResetContext 
+                ]
+        

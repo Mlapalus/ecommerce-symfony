@@ -1,3 +1,25 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+home:
+  path: /
+  methods: GET
+  controller: App\UI\Controller\HomeController::index
+
+api:
+  path: /api
+  methods: GET
+  controller: App\UI\Controller\HomeController::index
+
+
+creations:
+  path: /creations
+  methods: GET
+  controller: App\UI\Controller\CreationController::index
+
+about:
+  path: /a-propos
+  methods: GET
+  controller: App\UI\Controller\AboutController::index
+
+contact:
+  path: /contact
+  methods: GET
+  controller: App\UI\Controller\ContactController::index
