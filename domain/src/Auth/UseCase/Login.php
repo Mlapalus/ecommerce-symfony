@@ -24,6 +24,7 @@ class Login
     $request->validate();
 
     $user = $this->userGateway->getUserByEmail($request->getEmail());
+    var_dump($user);
 
     if ($user) {
       $passwordValid = password_verify($request->getPassword(), $user->getPassword());

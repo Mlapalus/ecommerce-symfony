@@ -2,12 +2,14 @@
 
 namespace App\Infra\Adapter\Repository;
 
-use App\Infra\Doctrine\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Domain\Auth\User\User;
+use App\Infra\Doctrine\Entity\User as DoctrineUser;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Domain\Auth\Gateway\UserGatewayInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,26 +17,74 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends ServiceEntityRepository implements UserGatewayInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, DoctrineUser::class);
     }
 
-    /**
-     * Used to upgrade (rehash) the user's password automatically over time.
-     */
-    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+
+    public function getUserByEmail(string $email): ?User
     {
-        if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+        /** 
+         * @var DoctrineUser $doctrineUser 
+         * 
+         */
+
+        $doctrineUser = $this->findOneBy(['email' => $email]); //dd($doctrineParticipant);
+        if ($doctrineUser === null) {
+            return null;
         }
 
-        $user->setPassword($newEncodedPassword);
-        $this->_em->persist($user);
+        return new User(
+            $doctrineUser->getIdentifiant(),
+            $doctrineUser->getEmail(),
+            $doctrineUser->getPseudo(),
+            $doctrineUser->getPassword(),
+            $doctrineUser->getPasswordResetToken(),
+            $doctrineUser->getPasswordResetRequestedAt()
+        );
+    }
+
+    public function isEmailUnique(?string $email): bool
+    {
+        return $this->count(["email" => $email]) === 0;
+    }
+
+    public function isPseudoUnique(?string $pseudo): bool
+    {
+        return $this->count(["pseudo" => $pseudo]) === 0;
+    }
+
+    public function register(User $user): void
+    {
+        $doctrineUser = new DoctrineUser();
+        $doctrineUser->setIdentifiant($user->getId());
+        $doctrineUser->setEmail($user->getEmail());
+        $doctrineUser->setPassword($user->getPassword());
+        $doctrineUser->setPseudo($user->getPseudo());
+
+        $this->_em->persist($doctrineUser);
         $this->_em->flush();
     }
+
+    public function update(User $user): void
+    {
+        /** @var DoctrineUser $doctrineUser */
+        $doctrineUser = $this->find($user->getId());
+
+        if (null === $doctrineUser) {
+            return;
+        }
+
+        $doctrineUser->setEmail($user->getEmail());
+        $doctrineUser->setPassword($user->getPassword());
+        $doctrineUser->setPseudo($user->getPseudo());
+        $doctrineUser->setPasswordResetToken($user->getResetPasswordToken());
+        $doctrineUser->setPasswordResetRequestedAt($user->getPasswordResetRequestAt);
+    }
+
 
     // /**
     //  * @return User[] Returns an array of User objects

@@ -43,7 +43,7 @@ class LoginRequest
 
   public function validate(): void
   {
-    Assertion::notBlank($this->email, "Email should not be blank.");
-    Assertion::notBlank($this->password, "Password should not be blank.");
+    Assertion::notBlank($this->email, "L'email doit être renseigné");
+    Assertion::notBlank($this->password, "Le mot de passe doit être mentionné");
   }
 }

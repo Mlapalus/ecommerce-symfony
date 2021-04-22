@@ -3,6 +3,7 @@
 namespace Domain\Auth\Request;
 
 use Domain\Auth\Assert\Assertion;
+use Assert\AssertionFailedException;
 
 class RecoverPasswordRequest
 {
@@ -44,6 +45,11 @@ class RecoverPasswordRequest
     return $this->token;
   }
 
+  /**
+   * validate
+   *
+   * @throws AssertionFailedException
+   */
   public function validate(): void
   {
     Assertion::notBlank($this->email);

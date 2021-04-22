@@ -2,12 +2,24 @@
 
 namespace App\UI\Controller;
 
+use App\UI\Viewer\Viewer;
+use App\UI\Viewer\ViewerInterface;
 use Symfony\Component\HttpFoundation\Response;
+
 
 class HomeController
 {
+  private ViewerInterface $viewer;
+
+  public function __construct(Viewer $viewer)
+  {
+    $this->viewer = $viewer;
+  }
   public function index(): Response
   {
-    return new Response('Page Home', Response::HTTP_OK);
+    return new Response($this->viewer->render(
+      "home",
+      []
+    ));
   }
 }

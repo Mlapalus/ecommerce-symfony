@@ -3,6 +3,31 @@ home:
   methods: GET
   controller: App\UI\Controller\HomeController::index
 
+login:
+    path: /login
+    methods: GET|POST
+    controller: App\UI\Controller\LoginController::index
+
+logout:
+    path: /logout
+    methods: GET
+
+registration:
+    path: /registration
+    methods: GET|POST
+    controller: App\UI\Controller\RegistrationController::index
+
+ask_password_reset:
+    path: /reset-password
+    methods: GET|POST
+    controller: App\UI\Controller\Security\AskPasswordResetController::index
+
+recover_password:
+    path: /handle-reset-password/{email}/{token}
+    methods: GET|POST
+    controller: App\UI\Controller\Security\RecoverPasswordController::index
+
+
 api:
   path: /api
   methods: GET

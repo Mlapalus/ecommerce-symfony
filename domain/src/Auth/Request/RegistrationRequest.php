@@ -21,7 +21,7 @@ class RegistrationRequest
     $this->plainpassword = $plainpassword;
   }
 
-  public function create(
+  public static function create(
     string $email,
     string $pseudo,
     string $plainpassword
@@ -53,6 +53,12 @@ class RegistrationRequest
     return $this->plainpassword;
   }
 
+  /**
+   * validate
+   *
+   * @param  UserGatewayInterface $gateway
+   * @throws AssertionFailedException
+   */
   public function validate(UserGatewayInterface $gateway): void
   {
     Assertion::notBlank($this->email);

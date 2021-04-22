@@ -10,7 +10,7 @@ use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Entity(repositoryClass="App\Infra\Adapter\Repository\UserRepository")
  * @ORM\Table(name="`user`")
  */
 class User implements UserInterface
@@ -22,6 +22,10 @@ class User implements UserInterface
      */
     private int $id;
 
+    /**
+     * @var UuidInterface
+     * @ORM\Column(type="uuid")
+     */
     private UuidInterface $identifiant;
 
     /**

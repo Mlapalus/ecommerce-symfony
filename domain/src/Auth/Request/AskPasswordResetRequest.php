@@ -3,7 +3,7 @@
 namespace Domain\Auth\Request;
 
 use Domain\Auth\Assert\Assertion;
-
+use Assert\AssertionFailedException;
 
 class AskPasswordResetRequest
 {
@@ -26,6 +26,11 @@ class AskPasswordResetRequest
     return new self($email);
   }
 
+  /**
+   * validate
+   *
+   * @throws AssertionFailedException 
+   */
   public function validate(): void
   {
     Assertion::notBlank($this->email, "Email should not be blank.");

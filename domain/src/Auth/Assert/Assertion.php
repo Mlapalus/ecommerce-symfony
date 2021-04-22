@@ -17,14 +17,14 @@ class Assertion extends BaseAssertion
   public static function nonUniquePseudo(string $pseudo, UserGatewayInterface $gateway): void
   {
     if (!$gateway->isPseudoUnique($pseudo)) {
-      throw new NonUniquePseudoException("This pseudo shold be unique !", self::EXISTING_PSEUDO);
+      throw new NonUniquePseudoException("This pseudo should be unique !", self::EXISTING_PSEUDO);
     }
   }
 
   public static function nonUniqueEmail(string $email, UserGatewayInterface $gateway): void
   {
     if (!$gateway->isEmailUnique($email)) {
-      throw new NonUniqueEmailException("This email shold be unique !", self::EXISTING_EMAIL);
+      throw new NonUniqueEmailException("This email should be unique !", self::EXISTING_EMAIL);
     }
   }
 }

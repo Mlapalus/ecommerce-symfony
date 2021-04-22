@@ -6,7 +6,6 @@ use Domain\Auth\User\User;
 
 interface UserGatewayInterface
 {
-
   public function getUserByEmail(string $email): ?User;
   public function isEmailUnique(?string $email): bool;
   public function isPseudoUnique(?string $pseudo): bool;
